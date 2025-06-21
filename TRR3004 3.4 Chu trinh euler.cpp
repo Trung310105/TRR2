@@ -16,29 +16,37 @@ const int mod = 1e9 + 7;
 using namespace std;
 
 int n, start;
-int a[maxn][maxn];
+int a[maxn][maxn], in[maxn], out[maxn];
 bool used[maxn], vis[maxn][maxn];
+set<int> g[maxn];
 
 void dfs(int u)
 {
     used[u] = true;
-    for(int v = 1; v <= n; v++)
+    for(int v : g[u])
     {
-        if(!used[v] && a[u][v] == 1)
-        {
-            dfs(v);
-        }
+        if(!used[v]) dfs(v);
     }
 }
 
 void sol_1()
 {
     cin >> n;
+    memset(in, 0, sizeof in);
+    memset(out, 0, sizeof out);
     for(int i = 1; i <= n; i++)
     {
         for(int j = 1; j <= n; j++)
         {
             cin >> a[i][j];
+            if(a[i][j] == 1)
+            {
+                g[i].insert(j);
+                g[j].insert(i);
+
+                in[j]++;
+                out[i]++;
+            }
         }
     }
 
@@ -54,18 +62,21 @@ void sol_1()
 
     if(ccs == 1)
     {   
-        int odd = 0;
-        for(int u = 1; u <= n; u++)
+        int s = 0, t = 0;
+        for(int i = 1;  i <= n; i++)
         {
-            int cnt = 0;
-            for(int v = 1; v <= n; v++)
+            if(in[i] == out[i]) continue;
+            else if((in[i] + 1) == out[i]) s++;
+            else if(in[i] == (out[i] + 1)) t++;
+            else
             {
-                if(a[u][v] == 1) cnt++;
+                cout << "0\n";
+                return;
             }
-            if(cnt & 1) odd++;
         }
-        if(odd == 0) cout << "1\n";
-        else if(odd == 2) cout << "2\n";
+
+        if(s == 0 && t == 0) cout << "1\n";
+        else if(s == 1 && t == 1) cout << "2\n";
         else cout << "0\n";
     }
     else cout << "0\n";
@@ -91,14 +102,15 @@ void sol_2()
         bool ok = false;
         for(int v = 1; v <= n; v++)
         {
-            if(!vis[u][v] && a[u][v])
+            if(!vis[u][v] && a[u][v] == 1)
             {
-                vis[u][v] = vis[v][u] = true;
-                st.push(v);
+                vis[u][v] = true;
                 ok = true;
-                break;
+                st.push(v);
+                break; 
             }
         }
+
         if(!ok)
         {
             path.push_back(st.top());
