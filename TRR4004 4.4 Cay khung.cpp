@@ -39,7 +39,7 @@ void prim()
     int u = start;
     for(int v = 1; v <= n; v++)
     {
-        if(a[u][v] > 0 && a[u][v] < 50)
+        if(a[u][v] > 0 && a[u][v] <= 50)
         {
             pq.push({a[u][v], {u, v}});
         }
@@ -69,8 +69,8 @@ void prim()
 signed main()
 {
     fater();
-    // freopen("CK.INP", "r", stdin);
-    // freopen("CK.OUT", "w", stdout);
+    freopen("CK.INP", "r", stdin);
+    freopen("CK.OUT", "w", stdout);
     cin >> n >> start;
     for(int i = 1; i <= n; i++)
     {
